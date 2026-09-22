@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VeloDesk · Tu propio servidor</title>
+<style>
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#0f172a;color:#e2e8f0;line-height:1.6}
+  main{max-width:760px;margin:0 auto;padding:40px 16px}
+  a{color:#38bdf8}
+  h1{color:#38bdf8}
+  pre{background:#0b1220;padding:12px;border-radius:8px;overflow:auto}
+  code{background:#0b1220;padding:2px 6px;border-radius:4px}
+</style>
+</head>
+<body>
+<main>
+  <p><a href="index.html">← VeloDesk</a></p>
+  <h1>Tu propio servidor de conexión</h1>
+  <p>VeloDesk necesita un servidor de "encuentro" (para que los equipos se localicen por su ID) y un servidor de "relé" (por si la conexión directa no es posible). Ambos van en el mismo programa, son gratuitos y consumen muy poco: un servidor de 1 GB de RAM sirve para cientos de equipos.</p>
+
+  <h2>1. Consigue un servidor gratis</h2>
+  <p>Oracle Cloud tiene una capa "Always Free" con máquinas ARM de hasta 4 núcleos y 24 GB de RAM que no caducan. Crea una cuenta en <a href="https://www.oracle.com/cloud/free/">oracle.com/cloud/free</a> (piden tarjeta solo para verificar identidad, no cobran), crea una instancia Ubuntu y apunta su IP pública.</p>
+  <p>Cualquier otro VPS (Hetzner, OVH, Contabo…) o un PC en casa siempre encendido con puertos abiertos también sirve.</p>
+
+  <h2>2. Instala el servidor</h2>
+  <p>Conéctate por SSH y ejecuta el script del repositorio de VeloDesk (carpeta <code>server/</code>):</p>
+  <pre>curl -fsSL https://raw.githubusercontent.com/CAMBIAR-USUARIO/velodesk/master/server/instalar-servidor.sh | sudo bash</pre>
+  <p>El script instala Docker, arranca los dos servicios, abre los puertos y al final imprime la <strong>clave pública</strong> del servidor.</p>
+
+  <h2>3. Abre los puertos</h2>
+  <p>En el panel de tu proveedor (en Oracle: "Security List" de la red virtual) permite el tráfico entrante en:</p>
+  <ul>
+    <li>TCP 21115, 21116, 21117, 21118, 21119</li>
+    <li>UDP 21116</li>
+  </ul>
+
+  <h2>4. Configura VeloDesk</h2>
+  <p>En cada equipo: Ajustes → Red → Servidor ID/Relé. Escribe la IP o dominio del servidor en "Servidor ID" y pega la clave pública en "Key". Deja "Servidor relé" vacío (usa el mismo). Repite en todos los equipos que quieras conectar entre sí.</p>
+  <p>Consejo: comparte la configuración de una vez con el botón "Exportar configuración de servidor" y pégala en los demás equipos con "Importar".</p>
+
+  <h2>Problemas frecuentes</h2>
+  <ul>
+    <li><strong>"Key mismatch"</strong>: la clave copiada tiene un espacio o un salto de línea al final. Cópiala de nuevo.</li>
+    <li><strong>"Ready" pero no conecta</strong>: falta abrir el puerto UDP 21116 o el firewall del sistema (ufw / iptables) lo bloquea.</li>
+    <li><strong>Siempre por relé</strong>: uno de los dos equipos está tras un router muy restrictivo. Funciona igual, solo con algo más de latencia.</li>
+  </ul>
+</main>
+</body>
+</html>

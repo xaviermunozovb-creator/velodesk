@@ -1,0 +1,29 @@
+# Servidor de conexión (hbbs) y relé (hbbr) para VeloDesk.
+# Usa la imagen oficial del servidor libre de RustDesk (AGPL-3.0).
+#
+#   docker compose up -d
+#   cat data/id_ed25519.pub     # clave pública que va en el campo "Key" de la app
+#
+# Puertos: TCP 21115-21119 y UDP 21116. `network_mode: host` es obligatorio para
+# que el servidor vea las IP reales de los clientes (si no, todo iría por relé).
+services:
+  hbbs:
+    image: rustdesk/rustdesk-server:latest
+    container_name: velodesk-hbbs
+    # -k _ obliga a que todos los clientes tengan la clave pública correcta.
+    command: hbbs -k _
+    volumes:
+      - ./data:/root
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      - hbbr
+
+  hbbr:
+    image: rustdesk/rustdesk-server:latest
+    container_name: velodesk-hbbr
+    command: hbbr -k _
+    volumes:
+      - ./data:/root
+    network_mode: host
+    restart: unless-stopped

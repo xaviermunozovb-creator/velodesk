@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_hbb/brand.dart';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -186,10 +187,9 @@ class _InstallPageBodyState extends State<_InstallPageBody>
                               .marginOnly(bottom: em),
                           InkWell(
                             hoverColor: Colors.transparent,
-                            onTap: () => launchUrlString(
-                                'https://rustdesk.com/privacy.html'),
+                            onTap: () => launchUrlString(kBrandPrivacyUrl),
                             child: Tooltip(
-                              message: 'https://rustdesk.com/privacy.html',
+                              message: kBrandPrivacyUrl,
                               child: Row(children: [
                                 Icon(Icons.launch_outlined, size: 16)
                                     .marginOnly(right: 5),

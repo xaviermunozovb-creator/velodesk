@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_hbb/brand.dart';
 import 'dart:convert';
 import 'dart:math';
 
@@ -3738,7 +3739,7 @@ Widget loadPowered(BuildContext context) {
     cursor: SystemMouseCursors.click,
     child: GestureDetector(
       onTap: () {
-        launchUrl(Uri.parse('https://rustdesk.com'));
+        launchUrl(Uri.parse(kBrandWebsite));
       },
       child: Opacity(
           opacity: 0.5,

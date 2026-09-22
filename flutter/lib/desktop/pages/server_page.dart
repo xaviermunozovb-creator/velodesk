@@ -1054,6 +1054,41 @@ class _CmControlPanel extends StatelessWidget {
     ).marginOnly(bottom: buttonBottomMargin);
   }
 
+  // VeloDesk: remote-access tools are the main vector of "fake tech support"
+  // scams, so the accept panel always explains the risk before the buttons.
+  Widget buildScamWarning(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.red.withOpacity(0.08),
+        border: Border.all(color: Colors.red.withOpacity(0.6)),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.red, size: 16)
+                .marginOnly(right: 4),
+            Expanded(
+              child: Text(
+                translate('scam_title'),
+                style: TextStyle(
+                    color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12),
+              ),
+            ),
+          ]),
+          Text(
+            translate('scam_text1'),
+            style: TextStyle(fontSize: 11),
+          ).marginOnly(top: 4),
+        ],
+      ),
+    );
+  }
+
   buildDisconnected(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -1081,6 +1116,11 @@ class _CmControlPanel extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        Offstage(
+          offstage: !showAccept ||
+              bind.mainGetLocalOption(key: "show-scam-warning") == "N",
+          child: buildScamWarning(context),
+        ),
         Offstage(
           offstage: !showElevation || !showAccept,
           child: buildButton(context, color: Colors.green[700], onClick: () {

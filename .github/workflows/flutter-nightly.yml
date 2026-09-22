@@ -1,9 +1,7 @@
 name: Flutter Nightly Build
 
 on:
-  schedule:
-    # schedule build every night
-    - cron: "0 0 * * *"
+  # VeloDesk: sin compilación nocturna automática; lánzala a mano desde la pestaña Actions.
   workflow_dispatch:
 
 jobs:

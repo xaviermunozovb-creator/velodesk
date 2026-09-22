@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter_hbb/brand.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -2554,7 +2555,7 @@ class _AboutState extends State<_About> {
                       .marginSymmetric(vertical: 4.0)),
               InkWell(
                   onTap: () {
-                    launchUrlString('https://rustdesk.com/privacy.html');
+                    launchUrlString(kBrandPrivacyUrl);
                   },
                   child: Text(
                     translate('Privacy Statement'),
@@ -2562,7 +2563,7 @@ class _AboutState extends State<_About> {
                   ).marginSymmetric(vertical: 4.0)),
               InkWell(
                   onTap: () {
-                    launchUrlString('https://rustdesk.com');
+                    launchUrlString(kBrandWebsite);
                   },
                   child: Text(
                     translate('Website'),

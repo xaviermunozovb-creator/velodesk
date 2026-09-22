@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VeloDesk · Escritorio remoto libre</title>
+<meta name="description" content="VeloDesk: escritorio remoto gratuito y de código abierto para Windows, Android, macOS e iOS. Sin cuenta, sin límites, con actualizaciones automáticas.">
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--fg:#e2e8f0;--muted:#94a3b8;--accent:#38bdf8;--accent2:#22c55e;--warn:#f87171}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.5}
+  header{padding:48px 16px 24px;text-align:center}
+  h1{font-size:2.6rem;margin:0 0 8px}
+  h1 span{color:var(--accent)}
+  .tag{color:var(--muted);font-size:1.15rem;max-width:640px;margin:0 auto}
+  main{max-width:1000px;margin:0 auto;padding:0 16px 64px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}
+  .card{background:var(--card);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:8px}
+  .card h3{margin:0;font-size:1.1rem}
+  .card p{margin:0;color:var(--muted);font-size:.95rem}
+  .btn{display:inline-block;margin-top:auto;padding:10px 14px;border-radius:8px;background:var(--accent);color:#0f172a;font-weight:600;text-decoration:none;text-align:center}
+  .btn.secondary{background:transparent;border:1px solid var(--muted);color:var(--fg)}
+  section{margin-top:48px}
+  h2{border-left:4px solid var(--accent);padding-left:12px}
+  ul{padding-left:20px}
+  li{margin:6px 0}
+  .warn{background:rgba(248,113,113,.12);border:1px solid var(--warn);border-radius:12px;padding:16px}
+  .warn strong{color:var(--warn)}
+  footer{color:var(--muted);text-align:center;padding:24px 16px;font-size:.9rem}
+  code{background:#0b1220;padding:2px 6px;border-radius:4px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<header>
+  <h1><span>Velo</span>Desk</h1>
+  <p class="tag">Escritorio remoto gratuito y de código abierto. Sin cuenta obligatoria, sin límites de dispositivos, sin avisos de "uso comercial" y con actualizaciones automáticas.</p>
+</header>
+<main>
+  <section id="descargar">
+    <h2>Descargar</h2>
+    <p>Última versión: <strong id="version">consultando…</strong>. Todas las descargas vienen de <a id="releases-link" href="#">GitHub Releases</a>, donde también está el código fuente.</p>
+    <div class="grid">
+      <div class="card"><h3>Windows</h3><p>Windows 10 y 11 de 64 bits. Instalador y modo portable en un solo archivo. SmartScreen puede mostrar un aviso porque el instalador no está firmado: pulsa "Más información" y "Ejecutar de todas formas".</p><a class="btn" data-asset="VeloDesk-windows-x86_64.exe" href="#">Descargar para Windows</a><a class="btn secondary" data-asset="VeloDesk-windows-aarch64.exe" href="#">Windows ARM64</a></div>
+      <div class="card"><h3>Android</h3><p>APK universal. Al instalar, Android pedirá permiso para "instalar apps desconocidas". Para controlar el teléfono desde otro equipo hay que activar el servicio de accesibilidad de VeloDesk.</p><a class="btn" data-asset="VeloDesk-android.apk" href="#">Descargar APK</a></div>
+      <div class="card"><h3>macOS</h3><p>Apple Silicon (M1 en adelante) o Intel. Como la app no está notarizada, la primera vez ábrela con clic derecho → Abrir.</p><a class="btn" data-asset="VeloDesk-macos-aarch64.dmg" href="#">Descargar para Mac (Apple Silicon)</a><a class="btn secondary" data-asset="VeloDesk-macos-x86_64.dmg" href="#">Mac (Intel)</a></div>
+      <div class="card"><h3>iPhone / iPad</h3><p>Solo como controlador: iOS no permite ser controlado. Archivo IPA sin firmar para instalar con AltStore o Sideloadly usando tu Apple ID gratuito.</p><a class="btn" data-asset="VeloDesk-ios-unsigned.ipa" href="#">Descargar IPA</a></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Por qué VeloDesk</h2>
+    <ul>
+      <li><strong>Gratis de verdad.</strong> Todas las funciones, sin planes ni cobros: acceso desatendido, transferencia de archivos, portapapeles, audio, varias pantallas, chat, grabación, autenticación en dos pasos.</li>
+      <li><strong>Sin cuenta.</strong> Un ID y una contraseña bastan. Las cuentas solo sirven para sincronizar la libreta de direcciones y son opcionales.</li>
+      <li><strong>Se actualiza sola.</strong> Comprueba nuevas versiones una vez al día y se actualiza en segundo plano cuando no hay ninguna sesión activa.</li>
+      <li><strong>Tu servidor, tus datos.</strong> Puedes usar tu propio servidor de conexión (guía más abajo). Cifrado de extremo a extremo en todas las sesiones.</li>
+      <li><strong>Código abierto.</strong> Basado en <a href="https://github.com/rustdesk/rustdesk">RustDesk</a> (licencia AGPL-3.0). El código de VeloDesk es público.</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="warn">
+      <strong>Cuidado con las estafas.</strong> Si alguien que dice ser de tu banco, de Microsoft, de Hacienda o de "soporte técnico" te ha pedido por teléfono que instales esta app, cuelga: es una estafa. Nunca hagas operaciones bancarias mientras alguien controla tu equipo. VeloDesk muestra este aviso cada vez que alguien pide conectarse.
+    </div>
+  </section>
+
+  <section id="servidor">
+    <h2>Tu propio servidor (opcional)</h2>
+    <p>Por defecto VeloDesk usa los servidores públicos de RustDesk, que son lentos y tienen limitaciones. Con un servidor propio las conexiones son directas y no dependes de nadie. Guía completa en <a href="servidor.html">servidor.html</a>.</p>
+  </section>
+
+  <section id="ayuda">
+    <h2>Ayuda</h2>
+    <ul>
+      <li><a id="issues-link" href="#">Informar de un problema</a> en GitHub.</li>
+      <li><a href="privacidad.html">Política de privacidad</a>: VeloDesk no recopila datos.</li>
+    </ul>
+  </section>
+</main>
+<footer>VeloDesk · Basado en RustDesk (AGPL-3.0) · <a id="source-link" href="#">Código fuente</a></footer>
+<script>
+  // Un solo sitio para el repositorio: res/brand/set_brand.py actualiza esta línea.
+  const REPO = "CAMBIAR-USUARIO/velodesk";
+  const base = "https://github.com/" + REPO;
+  document.getElementById("releases-link").href = base + "/releases";
+  document.getElementById("issues-link").href = base + "/issues";
+  document.getElementById("source-link").href = base;
+  document.querySelectorAll("[data-asset]").forEach(a => {
+    a.href = base + "/releases/latest/download/" + a.dataset.asset;
+  });
+  fetch("https://api.github.com/repos/" + REPO + "/releases/latest")
+    .then(r => r.ok ? r.json() : Promise.reject(r.status))
+    .then(j => { document.getElementById("version").textContent = j.tag_name; })
+    .catch(() => { document.getElementById("version").textContent = "ver en GitHub"; });
+</script>
+</body>
+</html>

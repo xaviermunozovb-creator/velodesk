@@ -376,8 +376,8 @@ pub fn get_update_download_file_from_url(url: &str) -> Option<PathBuf> {
     let tag = segments.next()?;
     let filename = segments.next()?;
 
-    if owner != "rustdesk"
-        || repo != "rustdesk"
+    if owner != crate::brand::GITHUB_OWNER
+        || repo != crate::brand::GITHUB_REPO
         || releases != "releases"
         || download != "download"
         || tag.is_empty()
@@ -659,12 +659,18 @@ pub fn check_update_as_root() -> ResultType<bool> {
 mod tests {
     use super::get_download_file_from_url;
 
+    fn brand_asset(rest: &str) -> String {
+        format!(
+            "https://github.com/{}/{}/releases/download/{rest}",
+            crate::brand::GITHUB_OWNER,
+            crate::brand::GITHUB_REPO
+        )
+    }
+
     #[test]
     fn update_download_file_accepts_expected_github_asset_urls() {
-        let file = get_download_file_from_url(
-            "https://github.com/rustdesk/rustdesk/releases/download/1.4.0/rustdesk-1.4.0-x86_64.dmg",
-        )
-        .expect("valid GitHub release asset URL");
+        let file = get_download_file_from_url(&brand_asset("1.4.0/rustdesk-1.4.0-x86_64.dmg"))
+            .expect("valid GitHub release asset URL");
 
         assert_eq!(
             file.file_name().and_then(|name| name.to_str()),
@@ -675,19 +681,20 @@ mod tests {
     #[test]
     fn update_download_file_rejects_untrusted_or_malformed_urls() {
         for url in [
-            "http://github.com/rustdesk/rustdesk/releases/download/1/rustdesk.exe",
-            "https://example.com/rustdesk.exe",
-            "https://github.com/other/project/releases/download/1/rustdesk.exe",
-            "https://github.com/rustdesk/rustdesk/releases/download/1/",
-            "https://github.com/rustdesk/rustdesk/releases/download/1/nested/rustdesk.exe",
-            "https://github.com/rustdesk/rustdesk/releases/download/1/C:rustdesk.exe",
-            "https://user@github.com/rustdesk/rustdesk/releases/download/1/rustdesk.exe",
-            "https://github.com:443/rustdesk/rustdesk/releases/download/1/rustdesk.exe",
-            "https://github.com/rustdesk/rustdesk/releases/download/1/rustdesk.exe?download=1",
-            "https://github.com/rustdesk/rustdesk/releases/download/1/rustdesk.exe#download",
-            "not a url",
+            brand_asset("1/rustdesk.exe").replacen("https://", "http://", 1),
+            "https://example.com/rustdesk.exe".to_owned(),
+            "https://github.com/rustdesk/rustdesk/releases/download/1/rustdesk.exe".to_owned(),
+            "https://github.com/other/project/releases/download/1/rustdesk.exe".to_owned(),
+            brand_asset("1/"),
+            brand_asset("1/nested/rustdesk.exe"),
+            brand_asset("1/C:rustdesk.exe"),
+            brand_asset("1/rustdesk.exe").replacen("https://", "https://user@", 1),
+            brand_asset("1/rustdesk.exe").replacen("github.com/", "github.com:443/", 1),
+            brand_asset("1/rustdesk.exe?download=1"),
+            brand_asset("1/rustdesk.exe#download"),
+            "not a url".to_owned(),
         ] {
-            assert!(get_download_file_from_url(url).is_none(), "{url}");
+            assert!(get_download_file_from_url(&url).is_none(), "{url}");
         }
     }
 }
