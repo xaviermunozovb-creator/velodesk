@@ -2476,7 +2476,9 @@ pub fn is_outgoing_only() -> SyncReturn<bool> {
 }
 
 pub fn is_custom_client() -> SyncReturn<bool> {
-    SyncReturn(crate::common::is_custom_client())
+    // VeloDesk: the UI treats the brand build like stock RustDesk (update card,
+    // update settings), while the Rust side keeps the custom-client install paths.
+    SyncReturn(crate::common::is_custom_client() && !crate::brand::is_brand_app())
 }
 
 pub fn is_disable_settings() -> SyncReturn<bool> {
