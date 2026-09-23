@@ -81,13 +81,22 @@ def glyph_layer(scale=1.0, dx=0, dy=0, color=(255, 255, 255, 255), lines=True):
     return layer.resize((N, N), Image.LANCZOS)
 
 
+SOURCE = ROOT / "res/brand/icon-source.png"   # composición final (con el sello de Casara)
+
+
 def full_icon(margin=0.0):
-    """Icono completo: fondo redondeado + glifo. margin = fracción transparente alrededor."""
+    """Icono completo. Si existe res/brand/icon-source.png se usa tal cual (recortado
+    con esquinas redondeadas); si no, se dibuja el diseño procedural. margin = fracción
+    transparente alrededor."""
     inner = int(N * (1 - 2 * margin))
-    bg = gradient(inner).convert("RGBA")
-    bg.putalpha(rounded_mask(inner, int(inner * 0.219)))
-    g = glyph_layer().resize((inner, inner), Image.LANCZOS)
-    bg.alpha_composite(g)
+    if SOURCE.exists():
+        bg = Image.open(SOURCE).convert("RGBA").resize((inner, inner), Image.LANCZOS)
+        bg.putalpha(rounded_mask(inner, int(inner * 0.219)))
+    else:
+        bg = gradient(inner).convert("RGBA")
+        bg.putalpha(rounded_mask(inner, int(inner * 0.219)))
+        g = glyph_layer().resize((inner, inner), Image.LANCZOS)
+        bg.alpha_composite(g)
     out = Image.new("RGBA", (N, N), (0, 0, 0, 0))
     off = (N - inner) // 2
     out.paste(bg, (off, off))
@@ -165,7 +174,8 @@ def main():
 
     # Android
     dens = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4}
-    fg = glyph_layer(scale=0.62)             # zona segura del icono adaptativo (66/108)
+    # Icono adaptativo: el icono completo dentro de la zona segura (66/108), así el sello se ve también en Android.
+    fg = full_icon(margin=0.19)
     stat = glyph_layer(scale=1.0, lines=True)
     for d, k in dens.items():
         base = f"flutter/android/app/src/main/res/mipmap-{d}"
@@ -193,6 +203,7 @@ def main():
     save(icon.resize((256, 256), Image.LANCZOS), "fastlane/metadata/android/en-US/images/icon.png")
     save(icon.resize((512, 512), Image.LANCZOS), "website/icon-512.png")
     save(wordmark((255, 255, 255, 255)), "website/logo-dark.png")
+    save(wordmark((0x33, 0x41, 0x55, 255)), "res/logo-header.png")
 
     # SVG (misma geometría)
     svg_icon = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">

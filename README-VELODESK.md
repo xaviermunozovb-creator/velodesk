@@ -1,4 +1,4 @@
-<p align="center"><img src="res/logo-header.svg" alt="VeloDesk" width="450"></p>
+<p align="center"><img src="res/logo-header.png" alt="VeloDesk" width="450"></p>
 
 # VeloDesk
 
