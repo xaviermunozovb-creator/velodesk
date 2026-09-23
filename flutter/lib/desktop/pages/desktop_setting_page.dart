@@ -996,6 +996,7 @@ class _SafetyState extends State<_Safety> with AutomaticKeepAliveClientMixin {
             preventMouseKeyBuilder(
               block: locked,
               child: Column(children: [
+                tpvMode(context),
                 permissions(context),
                 password(context),
                 _Card(title: '2FA', children: [tfa()]),
@@ -1230,6 +1231,59 @@ class _SafetyState extends State<_Safety> with AutomaticKeepAliveClientMixin {
     }
 
     return tmpWrapper();
+  }
+
+  // VeloDesk: one-click unattended access for POS terminals. Sets a permanent
+  // password, accepts sessions via password only and hides the connection
+  // manager window (`allow-hide-cm`, honored for brand builds).
+  Widget tpvMode(BuildContext context) {
+    return ChangeNotifierProvider.value(
+        value: gFFI.serverModel,
+        child: Consumer<ServerModel>(builder: ((context, model, child) {
+          final active = model.approveMode == 'password' &&
+              model.verificationMethod == kUsePermanentPassword &&
+              option2bool('allow-hide-cm',
+                  bind.mainGetOptionSync(key: 'allow-hide-cm'));
+          return _Card(title: 'TPV mode', children: [
+            Text(
+              translate('tpv_mode_tip'),
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ).marginOnly(
+                left: _kContentHMargin, right: _kContentHMargin, bottom: 8),
+            Text(
+              translate(active ? 'tpv_mode_active' : 'tpv_mode_inactive'),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: active ? Colors.green : null),
+            ).marginOnly(
+                left: _kContentHMargin, right: _kContentHMargin, bottom: 8),
+            _SubButton(active ? 'Disable TPV mode' : 'Enable TPV mode',
+                active ? _disableTpvMode : _enableTpvMode, !locked),
+          ]);
+        })));
+  }
+
+  void _enableTpvMode() {
+    setPasswordDialog(notEmptyCallback: () {
+      () async {
+        final model = gFFI.serverModel;
+        await model.setVerificationMethod(kUsePermanentPassword);
+        await model.setApproveMode('password');
+        await bind.mainSetOption(key: 'allow-hide-cm', value: 'Y');
+        await model.updatePasswordModel();
+        if (mounted) setState(() {});
+      }();
+    });
+  }
+
+  void _disableTpvMode() {
+    () async {
+      final model = gFFI.serverModel;
+      await bind.mainSetOption(key: 'allow-hide-cm', value: 'N');
+      await model.setApproveMode('both');
+      await model.updatePasswordModel();
+      if (mounted) setState(() {});
+    }();
   }
 
   Widget password(BuildContext context) {

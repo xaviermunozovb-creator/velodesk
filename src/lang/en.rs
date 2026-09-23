@@ -279,5 +279,11 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("terminal-clipboard-write-tip", "An app in the terminal wants to copy text to this device's clipboard. If granted, this permission applies to terminal apps in all connections until you turn it off in Settings. Manual copy and paste are unaffected."),
         ("port-forward-mux-tip", "Carry every connection of a port-forward mapping over a single connection to the peer, instead of connecting and logging in again for each one."),
         ("relay-fallback-delay-tip", "How long a relay connection that is already up waits for the direct WebRTC connection before it is used instead. Raise it to give a slow direct connection more time to win; lower it to settle on the relay sooner on networks where a direct connection cannot be made. Leave empty for the default of 2.5 seconds."),
+        ("TPV mode", "POS mode (silent unattended access)"),
+        ("tpv_mode_tip", "For shop terminals and unattended computers: connections that present the permanent password are accepted automatically, without any prompt, warning or connection window on this computer. Only people who know the password can connect."),
+        ("tpv_mode_active", "POS mode is active: this computer accepts connections silently with the permanent password."),
+        ("tpv_mode_inactive", "POS mode is off: every incoming connection shows the accept window."),
+        ("Enable TPV mode", "Enable POS mode"),
+        ("Disable TPV mode", "Disable POS mode"),
     ].iter().cloned().collect();
 }

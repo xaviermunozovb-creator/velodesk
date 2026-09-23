@@ -13,6 +13,7 @@ Fuentes: [INVESTIGACION-RUSTDESK.md](INVESTIGACION-RUSTDESK.md) y [INVESTIGACION
 | 5 | Equipo remoto que se duerme (Splashtop, CRD; síntesis #15) | "Mantener despierto durante sesiones entrantes" por defecto. | `src/brand.rs` |
 | 6 | Confusión gratis/Pro (RustDesk #14, #16) | Todo gratis, dicho en la web y en el README. | `website/` |
 | 7 | Desconfianza y privacidad (RustDesk #5, síntesis #11, #13) | Política de privacidad propia, sin telemetría, un solo nombre de producto. | `website/privacidad.html` |
+| 9 | Acceso desatendido con demasiados pasos y ventanas que molestan (RustDesk #4, síntesis #6) | Botón "Modo TPV" en Ajustes → Seguridad: contraseña permanente, aceptación por contraseña y ventana de conexión oculta en un clic (1.5.3). | `flutter/lib/desktop/pages/desktop_setting_page.dart` |
 | 8 | Instalador con nombre ajeno | MSI y EXE con nombre, empresa y copyright de VeloDesk; app Android con identificador propio (`com.velodesk.app`) que convive con RustDesk. | `flutter/windows/runner/Runner.rc`, `flutter/android/app/build.gradle`, workflow |
 
 ## Siguientes (por impacto y esfuerzo)
@@ -20,7 +21,6 @@ Fuentes: [INVESTIGACION-RUSTDESK.md](INVESTIGACION-RUSTDESK.md) y [INVESTIGACION
 | Prioridad | Mejora | Origen | Esfuerzo |
 |---|---|---|---|
 | Alta | Scroll a dos dedos y gestos configurables en la app móvil | RustDesk #9, síntesis #9 | Medio: `flutter/lib/models/input_model.dart`, `mobile/pages/remote_page.dart` |
-| Alta | Asistente de "acceso desatendido" al instalar (contraseña permanente + arranque con el sistema en tres clics) | RustDesk #4, síntesis #6 | Medio: `flutter/lib/desktop/pages/install_page.dart` |
 | Alta | Wake-on-LAN con MAC manual en la libreta de direcciones | RustDesk #17, síntesis #15 | Medio: `flutter/lib/common/widgets/peer_card.dart`, `src/lan.rs` |
 | Alta | Servicio Android que sobrevive en segundo plano (aviso de batería, reintento al cambiar de red) | RustDesk #8 | Medio-alto: `flutter/android/.../MainService.kt` |
 | Alta | Servidor de libreta de direcciones gratuito (reimplementación mínima de la API) | RustDesk #14 | Alto: nuevo servicio en `server/` |
