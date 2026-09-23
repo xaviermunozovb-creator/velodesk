@@ -4,6 +4,10 @@ on:
   # VeloDesk: sin compilación nocturna automática; lánzala a mano desde la pestaña Actions.
   workflow_dispatch:
 
+# VeloDesk: el token necesita escritura para publicar las Releases (el repositorio da solo lectura por defecto).
+permissions:
+  contents: write
+
 jobs:
   run-flutter-nightly-build:
     uses: ./.github/workflows/flutter-build.yml
