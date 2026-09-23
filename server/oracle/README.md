@@ -42,3 +42,15 @@ En la app: Ajustes → Red → Servidor ID/Relé → IP y Key. Para que todas la
 ## Si prefieres no usar clave API
 
 Puedes seguir pulsando **Crear** en el asistente de la consola hasta que entre. La otra opción es pasar la cuenta a "Pay As You Go" (botón Upgrade): Oracle da prioridad de capacidad a esas cuentas y sigue sin cobrar mientras solo uses recursos Always Free, pero ya hay tarjeta activa y conviene poner una alerta de presupuesto.
+
+## Relanzar el bucle (por ejemplo tras reiniciar el PC)
+
+El script corre como proceso oculto en Windows. Para volver a lanzarlo, en PowerShell desde la carpeta del proyecto:
+
+```powershell
+Start-Process python -ArgumentList '-u','server\oracle\reintentar-instancia.py','--instalar' -WorkingDirectory (Get-Location) -WindowStyle Hidden -RedirectStandardOutput server\oracle\logs\reintentos.log -RedirectStandardError server\oracle\logs\reintentos-err.log
+```
+
+Ver el progreso: `Get-Content server\oracle\logs\reintentos.log -Tail 5`. Pararlo: `Get-Process python | Stop-Process`.
+
+Si la máquina ya existe, el script no crea otra: detecta la que hay, imprime su IP y (con `--instalar`) instala el servidor.
