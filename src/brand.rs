@@ -13,7 +13,7 @@
 pub const APP_NAME: &str = "VeloDesk";
 
 /// Usuario u organización de GitHub que aloja el repositorio.
-pub const GITHUB_OWNER: &str = "CAMBIAR-USUARIO";
+pub const GITHUB_OWNER: &str = "xaviermunozovb-creator";
 
 /// Nombre del repositorio de GitHub. Las versiones se publican en sus "Releases".
 pub const GITHUB_REPO: &str = "velodesk";

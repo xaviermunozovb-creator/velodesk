@@ -1,7 +1,7 @@
 # Enlaces cortos de descarga (Cloudflare Pages). res/brand/set_brand.py actualiza el repositorio.
-/descargar/windows      https://github.com/CAMBIAR-USUARIO/velodesk/releases/latest/download/VeloDesk-windows-x86_64.exe  302
-/descargar/windows-arm  https://github.com/CAMBIAR-USUARIO/velodesk/releases/latest/download/VeloDesk-windows-aarch64.exe 302
-/descargar/android      https://github.com/CAMBIAR-USUARIO/velodesk/releases/latest/download/VeloDesk-android.apk         302
-/descargar/mac          https://github.com/CAMBIAR-USUARIO/velodesk/releases/latest/download/VeloDesk-macos-aarch64.dmg   302
-/descargar/mac-intel    https://github.com/CAMBIAR-USUARIO/velodesk/releases/latest/download/VeloDesk-macos-x86_64.dmg    302
-/descargar/ios          https://github.com/CAMBIAR-USUARIO/velodesk/releases/latest/download/VeloDesk-ios-unsigned.ipa    302
+/descargar/windows      https://github.com/xaviermunozovb-creator/velodesk/releases/latest/download/VeloDesk-windows-x86_64.exe  302
+/descargar/windows-arm  https://github.com/xaviermunozovb-creator/velodesk/releases/latest/download/VeloDesk-windows-aarch64.exe 302
+/descargar/android      https://github.com/xaviermunozovb-creator/velodesk/releases/latest/download/VeloDesk-android.apk         302
+/descargar/mac          https://github.com/xaviermunozovb-creator/velodesk/releases/latest/download/VeloDesk-macos-aarch64.dmg   302
+/descargar/mac-intel    https://github.com/xaviermunozovb-creator/velodesk/releases/latest/download/VeloDesk-macos-x86_64.dmg    302
+/descargar/ios          https://github.com/xaviermunozovb-creator/velodesk/releases/latest/download/VeloDesk-ios-unsigned.ipa    302

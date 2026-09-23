@@ -2,7 +2,7 @@
 # Instala el servidor de conexión de VeloDesk en Ubuntu/Debian (probado con la
 # capa gratuita de Oracle Cloud, Hetzner y OVH). Ejecutar como root:
 #
-#   curl -fsSL https://raw.githubusercontent.com/CAMBIAR-USUARIO/velodesk/master/server/instalar-servidor.sh | sudo bash
+#   curl -fsSL https://raw.githubusercontent.com/xaviermunozovb-creator/velodesk/master/server/instalar-servidor.sh | sudo bash
 #
 set -euo pipefail
 

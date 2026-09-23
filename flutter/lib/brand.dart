@@ -4,7 +4,7 @@
 // ejecuta `python res/brand/set_brand.py`, que actualiza ambos archivos.
 
 const String kBrandName = 'VeloDesk';
-const String kBrandGithubOwner = 'CAMBIAR-USUARIO';
+const String kBrandGithubOwner = 'xaviermunozovb-creator';
 const String kBrandGithubRepo = 'velodesk';
 const String kBrandWebsite = 'https://velodesk.pages.dev';
 

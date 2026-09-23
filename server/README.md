@@ -19,7 +19,7 @@ Ambos son software libre (AGPL-3.0) y consumen muy pocos recursos.
 ## Instalación en un clic (Ubuntu/Debian)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/CAMBIAR-USUARIO/velodesk/master/server/instalar-servidor.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/xaviermunozovb-creator/velodesk/master/server/instalar-servidor.sh | sudo bash
 ```
 
 Al terminar imprime la IP y la clave pública. Abre además en el panel del proveedor los puertos TCP 21115-21119 y UDP 21116.
@@ -28,7 +28,7 @@ Al terminar imprime la IP y la clave pública. Abre además en el panel del prov
 
 ```bash
 mkdir -p velodesk-server && cd velodesk-server
-curl -O https://raw.githubusercontent.com/CAMBIAR-USUARIO/velodesk/master/server/docker-compose.yml
+curl -O https://raw.githubusercontent.com/xaviermunozovb-creator/velodesk/master/server/docker-compose.yml
 docker compose up -d
 cat data/id_ed25519.pub
 ```
