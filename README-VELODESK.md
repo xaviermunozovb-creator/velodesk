@@ -1,3 +1,5 @@
+<p align="center"><img src="res/logo-header.svg" alt="VeloDesk" width="450"></p>
+
 # VeloDesk
 
 Escritorio remoto gratuito y de código abierto para **Windows, Android, macOS e iOS**, basado en [RustDesk](https://github.com/rustdesk/rustdesk) (licencia AGPL-3.0) y mejorado con lo que los usuarios de todo el mundo echan en falta en RustDesk, AnyDesk, TeamViewer, Chrome Remote Desktop, Parsec, Splashtop y compañía.
