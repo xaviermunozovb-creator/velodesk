@@ -181,7 +181,9 @@ fn check_update(manually: bool) -> ResultType<()> {
         return Ok(());
     }
     #[cfg(target_os = "windows")]
-    let update_msi = crate::platform::is_msi_installed()? && !crate::is_custom_client();
+    // VeloDesk: MSI installs update through MSI (the self-extracting exe trips antivirus heuristics).
+    let update_msi = crate::platform::is_msi_installed()?
+        && (!crate::is_custom_client() || crate::brand::is_brand_app());
     if !(manually || config::Config::get_bool_option(keys::OPTION_ALLOW_AUTO_UPDATE)) {
         return Ok(());
     }

@@ -2697,7 +2697,7 @@ pub fn main_get_common(key: String) -> String {
             #[cfg(target_os = "windows")]
             return match (
                 crate::platform::windows::is_msi_installed(),
-                crate::common::is_custom_client(),
+                crate::common::is_custom_client() && !crate::brand::is_brand_app(),
             ) {
                 (Ok(true), false) => match crate::platform::windows::release_arch_suffix() {
                     Some(arch) => format!("rustdesk-{_version}-{arch}.msi"),
