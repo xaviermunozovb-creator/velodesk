@@ -53,8 +53,8 @@ Si algún job falla, abre su registro: casi siempre es un paso de descarga exter
 
 ### Versiones siguientes
 
-1. Cambia la versión en `Cargo.toml`, `flutter/pubspec.yaml` y `.github/workflows/flutter-build.yml` (o usa `res/bump.sh 1.5.0 1.5.1`).
-2. `git commit -am "1.5.1" && git tag 1.5.1 && git push && git push origin 1.5.1`.
+1. `python res/brand/bump_version.py 1.5.3` (actualiza Cargo.toml, Cargo.lock, pubspec y los flujos; sin esto la compilación falla con "lock file needs to be updated").
+2. `git commit -am "Versión 1.5.3" && git tag 1.5.3 && git push origin master 1.5.3`.
 3. Las apps instaladas detectan la nueva versión en 24 horas y se actualizan solas (Windows y macOS instalados; en Android muestran un botón de descarga).
 
 ## 4. Web de descargas en Cloudflare Pages
