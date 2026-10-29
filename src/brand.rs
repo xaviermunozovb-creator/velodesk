@@ -24,11 +24,17 @@ pub const WEBSITE: &str = "https://velodesk.pages.dev";
 /// Ajustes por defecto que se aplican si el usuario no ha elegido otro valor.
 /// Mismo formato que la sección `default-settings` de un cliente personalizado
 /// de RustDesk; las claves están en `libs/base/src/config/keys.rs`.
+///
+/// `custom-rendezvous-server` y `key` son el servidor propio de VeloDesk
+/// (IslaTortuga, Hetzner; ver `server/instalar-islatortuga.sh`). Al ser un
+/// ajuste por defecto y no forzado, cada equipo puede poner otro en Ajustes → Red.
 pub const DEFAULT_SETTINGS: &str = r#"{
     "enable-check-update": "Y",
     "allow-auto-update": "Y",
     "hide-powered-by-me": "Y",
-    "keep-awake-during-incoming-sessions": "Y"
+    "keep-awake-during-incoming-sessions": "Y",
+    "custom-rendezvous-server": "46.225.99.214",
+    "key": "SVusqX3Gxwr0kHzOBnxeLIRNdADaT2krBSxG+IxcIsU="
 }"#;
 
 /// Ajustes forzados que el usuario no puede cambiar. Vacío a propósito: VeloDesk

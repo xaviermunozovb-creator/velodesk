@@ -24,6 +24,10 @@ curl -fsSL https://raw.githubusercontent.com/xaviermunozovb-creator/velodesk/mas
 
 Al terminar imprime la IP y la clave pública. Abre además en el panel del proveedor los puertos TCP 21115-21119 y UDP 21116.
 
+### Servidor que ya tiene otra cosa corriendo
+
+`instalar-islatortuga.sh` es la variante sin Docker: binarios oficiales con huella verificada, usuario de sistema propio, servicios systemd encerrados (solo escriben en su carpeta, límite de RAM y CPU) y firewall solo aditivo. Fotografía el estado de la máquina antes y después y avisa si algo más cambió. `desinstalar-islatortuga.sh` lo deshace y `diagnostico-udp.sh` comprueba desde dentro que los puertos responden. Es el que usa el servidor por defecto de VeloDesk.
+
 ## Instalación manual
 
 ```bash
