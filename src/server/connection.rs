@@ -1307,6 +1307,14 @@ impl Connection {
         }
         #[cfg(target_os = "linux")]
         clear_remapped_keycode();
+        // VeloDesk: si la sesion termina con la entrada bloqueada, se desbloquea de forma explicita
+        // para que la pantalla tactil vuelva a funcionar (ver platform::windows::block_input).
+        #[cfg(target_os = "windows")]
+        {
+            if block_input_mode {
+                let _ = crate::platform::block_input(false);
+            }
+        }
         log::debug!("Input thread exited");
     }
 

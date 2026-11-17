@@ -645,6 +645,9 @@ pub async fn start_server(is_server: bool, no_server: bool) {
 
     if is_server {
         crate::common::set_server_running(true);
+        // VeloDesk: si un bloqueo anterior dejo la pantalla tactil apagada, se vuelve a encender.
+        #[cfg(windows)]
+        crate::platform::windows::restore_touch_on_start();
         std::thread::spawn(move || {
             if let Err(err) = crate::ipc::start("") {
                 log::error!("Failed to start ipc: {}", err);

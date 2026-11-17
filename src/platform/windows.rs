@@ -1898,13 +1898,116 @@ pub fn toggle_blank_screen(v: bool) {
 }
 
 pub fn block_input(v: bool) -> (bool, String) {
-    let v = if v { TRUE } else { FALSE };
-    unsafe {
-        if BlockInput(v) == TRUE {
+    // VeloDesk: BlockInput() de Windows solo para el teclado y el raton. En un TPV tactil la pantalla
+    // seguia respondiendo, asi que «Bloquear entrada de usuario» tambien apaga la pantalla tactil.
+    let flag = if v { TRUE } else { FALSE };
+    let res = unsafe {
+        if BlockInput(flag) == TRUE {
             (true, "".to_owned())
         } else {
             (false, format!("Error: {}", io::Error::last_os_error()))
         }
+    };
+    // El tactil solo se apaga si el bloqueo de Windows ha entrado de verdad (si falla, quien llama no
+    // se queda en modo bloqueado y nadie lo volveria a encender). Encenderlo se intenta siempre.
+    if !v || res.0 {
+        set_touch_blocked(v);
+    }
+    res
+}
+
+// ---------------------------------------------------------------------------------------------
+// VeloDesk: bloqueo de la pantalla tactil junto con «Bloquear entrada de usuario».
+//
+// Se deshabilitan en Windows los dispositivos HID de tipo pantalla tactil (pagina de uso 0x0D,
+// uso 0x04) y se vuelven a habilitar al desbloquear. Reglas de seguridad:
+// - Solo se vuelven a habilitar los dispositivos que deshabilito VeloDesk: quedan apuntados en un
+//   fichero. Si alguien tenia el tactil apagado a proposito, no se toca. Y de ese fichero solo se
+//   habilitan pantallas tactiles, nunca otro tipo de dispositivo.
+// - block_input(true) se llama muchas veces seguidas mientras dura el bloqueo: solo se actua
+//   cuando cambia el estado.
+// - Si el equipo se apaga o VeloDesk se cierra con el tactil apagado, restore_touch_on_start()
+//   lo vuelve a encender en el siguiente arranque del servicio.
+// - Hace falta que VeloDesk este instalado (el servicio corre como SYSTEM). Si no tiene permisos,
+//   no pasa nada: el tactil sigue funcionando, igual que antes de este cambio.
+// ---------------------------------------------------------------------------------------------
+static TOUCH_BLOCKED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+static TOUCH_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+fn touch_marker_path() -> String {
+    // En la carpeta de configuracion de la cuenta que ejecuta el servicio (SYSTEM): un usuario
+    // normal del equipo no puede escribir ahi, asi que no puede manipular la lista.
+    Config::path("touch_disabled.txt")
+        .to_string_lossy()
+        .to_string()
+}
+
+fn run_hidden_powershell(script: &str) {
+    // Ruta completa: un proceso que corre como SYSTEM no debe buscar «powershell.exe» por el PATH.
+    let root = std::env::var("SystemRoot").unwrap_or_else(|_| "C:\\Windows".to_owned());
+    let exe = format!("{}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe", root);
+    let res = std::process::Command::new(exe)
+        .args(["-NoProfile", "-NonInteractive", "-Command", script])
+        .creation_flags(CREATE_NO_WINDOW)
+        .output();
+    if let Err(err) = res {
+        log::warn!("touch block: powershell failed: {}", err);
+    }
+}
+
+fn enable_touch_from_marker() {
+    let marker = touch_marker_path().replace('\'', "''");
+    let script = format!(
+        "$ErrorActionPreference='SilentlyContinue'; $m='{marker}'; \
+         if (Test-Path -LiteralPath $m) {{ \
+           Get-Content -LiteralPath $m | Where-Object {{ $_ }} | ForEach-Object {{ \
+             Get-PnpDevice -InstanceId $_ | \
+               Where-Object {{ ($_.HardwareID -join ' ') -match 'HID_DEVICE_UP:000D_U:0004' }} | \
+               ForEach-Object {{ Enable-PnpDevice -InstanceId $_.InstanceId -Confirm:$false }} }}; \
+           Remove-Item -LiteralPath $m -Force }}"
+    );
+    run_hidden_powershell(&script);
+}
+
+fn disable_touch_to_marker() {
+    let marker = touch_marker_path().replace('\'', "''");
+    let script = format!(
+        "$ErrorActionPreference='SilentlyContinue'; $m='{marker}'; \
+         New-Item -ItemType Directory -Force -Path (Split-Path -Parent $m) | Out-Null; \
+         Get-PnpDevice -PresentOnly -Class HIDClass | \
+           Where-Object {{ $_.Status -eq 'OK' -and (($_.HardwareID -join ' ') -match 'HID_DEVICE_UP:000D_U:0004') }} | \
+           ForEach-Object {{ Add-Content -LiteralPath $m -Value $_.InstanceId; Disable-PnpDevice -InstanceId $_.InstanceId -Confirm:$false }}"
+    );
+    run_hidden_powershell(&script);
+}
+
+fn set_touch_blocked(block: bool) {
+    use std::sync::atomic::Ordering;
+    if TOUCH_BLOCKED.swap(block, Ordering::SeqCst) == block {
+        return; // sin cambio de estado: nada que hacer
+    }
+    // En otro hilo: PowerShell tarda uno o dos segundos y no debe parar la entrada remota.
+    std::thread::spawn(move || {
+        let _guard = TOUCH_LOCK.lock();
+        // Se mira el estado que se quiere AHORA, por si se ha pulsado bloquear y desbloquear muy seguido.
+        if TOUCH_BLOCKED.load(Ordering::SeqCst) {
+            disable_touch_to_marker();
+        } else {
+            enable_touch_from_marker();
+        }
+    });
+}
+
+/// Al arrancar el servicio: si la pantalla tactil se quedo apagada por un bloqueo anterior
+/// (corte de luz, apagado con el boton, cierre brusco), se vuelve a encender.
+pub fn restore_touch_on_start() {
+    if std::path::Path::new(&touch_marker_path()).exists() {
+        std::thread::spawn(|| {
+            let _guard = TOUCH_LOCK.lock();
+            if !TOUCH_BLOCKED.load(std::sync::atomic::Ordering::SeqCst) {
+                enable_touch_from_marker();
+            }
+        });
     }
 }
 
